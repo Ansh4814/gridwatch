@@ -111,3 +111,5 @@ body { background: #0a0a0f; color: #e0e0e0; font-family: "Inter", sans-serif; }
 .export-download-btn { width: 100%; margin-top: 14px; padding: 10px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: none; }
 .export-download-btn.active { background: #0ea5e9; color: #fff; }
 .export-download-btn.disabled { background: #1f2937; color: #4b5563; cursor: not-allowed; }
+.picker-name { flex: 1; }
+.picker-disabled { opacity: 0.4; cursor: not-allowed !important; }
