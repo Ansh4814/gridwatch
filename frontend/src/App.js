@@ -7,7 +7,7 @@ import CompareMode from "./components/CompareMode";
 import "./App.css";
 import axios from "axios";
 
-const API = "http://127.0.0.1:8000/api";
+const API = "https://gridwatch-production.up.railway.app/api";
 
 function App() {
   const [neighborhoods, setNeighborhoods] = useState([]);

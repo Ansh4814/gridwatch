@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, BarChart, Bar, Legend } from "recharts";
 import axios from "axios";
 
-const API = "http://127.0.0.1:8000/api";
+const API = "https://gridwatch-production.up.railway.app/api";
 
 export default function Sidebar({ selected, forecast, neighborhoods, onBack, subsidy, moratorium, tempOverride, onCompare }) {
   const [explanation, setExplanation] = useState("");

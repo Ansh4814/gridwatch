@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Legend } from "recharts";
 import axios from "axios";
 
-const API = "http://127.0.0.1:8000/api";
+const API = "https://gridwatch-production.up.railway.app/api";
 
 export default function CompareMode({ neighborhoods, onClose, tempOverride }) {
   const [id1, setId1] = useState(neighborhoods[0]?.id || 1);
