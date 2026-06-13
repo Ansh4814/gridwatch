@@ -23,7 +23,7 @@ export default function ExportModal({ onClose, neighborhoods, subsidy, moratoriu
       onClose();
     } else if (mode === "custom" && customSelected.length > 0) {
       const p = new URLSearchParams(params);
-      customSelected.forEach(id => p.append("ids", id));
+      p.append("ids", customSelected.join(","));
       window.open(`${API}/report/custom?${p.toString()}`, "_blank");
       onClose();
     } else if (mode === "compare" && customSelected.length >= 2) {

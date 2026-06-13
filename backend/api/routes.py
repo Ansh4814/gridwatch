@@ -150,10 +150,10 @@ def download_single_report(neighborhood_id: int, subsidy: float = 0.0, moratoriu
 
 
 @router.get("/report/custom")
-def download_custom_report(ids: list[int] = [], subsidy: float = 0.0, moratorium: bool = False, temp_override: float = None):
-    from fastapi import Query
+def download_custom_report(ids: str = "", subsidy: float = 0.0, moratorium: bool = False, temp_override: float = None):
     temp = temp_override if temp_override else get_boston_temp()
-    selected = [n for n in NEIGHBORHOODS if n["id"] in ids]
+    id_list = [int(x) for x in ids.split(",") if x.strip().isdigit()]
+    selected = [n for n in NEIGHBORHOODS if n["id"] in id_list]
     if not selected:
         return {"error": "No neighborhoods selected"}
     neighborhoods = []
