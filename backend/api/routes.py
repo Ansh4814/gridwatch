@@ -148,6 +148,25 @@ def download_single_report(neighborhood_id: int, subsidy: float = 0.0, moratoriu
         headers={"Content-Disposition": f"attachment; filename=gridwatch_{name}.pdf"}
     )
 
+
+@router.get("/report/custom")
+def download_custom_report(ids: list[int] = [], subsidy: float = 0.0, moratorium: bool = False, temp_override: float = None):
+    from fastapi import Query
+    temp = temp_override if temp_override else get_boston_temp()
+    selected = [n for n in NEIGHBORHOODS if n["id"] in ids]
+    if not selected:
+        return {"error": "No neighborhoods selected"}
+    neighborhoods = []
+    for n in selected:
+        risk = ml_predict(n, temp, subsidy_boost=subsidy, moratorium=moratorium)
+        neighborhoods.append({**n, **risk})
+    pdf = generate_report(neighborhoods, temp, subsidy, moratorium)
+    return Response(
+        content=pdf,
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=gridwatch_custom_report.pdf"}
+    )
+
 @router.get("/health")
 def health():
     return {"status": "ok", "service": "GridWatch API", "model": "GradientBoostingRegressor"}

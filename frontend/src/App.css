@@ -95,3 +95,19 @@ body { background: #0a0a0f; color: #e0e0e0; font-family: "Inter", sans-serif; }
 .export-title { font-weight: 700; color: #f9fafb; font-size: 0.9rem; margin-bottom: 3px; }
 .export-desc { font-size: 0.78rem; color: #9ca3af; line-height: 1.4; }
 .export-arrow { color: #6b7280; font-size: 1.1rem; }
+.export-option { display: flex; align-items: center; gap: 12px; background: #1f2937; border: 2px solid #374151; border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.15s; margin-bottom: 6px; }
+.export-option.selected { border-color: #0ea5e9; background: #0c1929; }
+.export-option:hover { background: #263244; }
+.custom-picker { background: #0f172a; border: 1px solid #1f2937; border-radius: 8px; padding: 12px; margin-bottom: 6px; }
+.compare-picker { background: #0f172a; border: 1px solid #1f2937; border-radius: 8px; padding: 12px; margin-bottom: 6px; }
+.picker-title { font-size: 0.8rem; color: #9ca3af; margin-bottom: 8px; font-weight: 600; }
+.picker-grid { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; }
+.picker-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.83rem; color: #d1d5db; background: #1f2937; border: 1px solid transparent; }
+.picker-item:hover { background: #263244; }
+.picker-item.picked { border-color: #0ea5e9; background: #0c1929; color: #f9fafb; }
+.picker-score { margin-left: auto; font-weight: 700; font-size: 0.8rem; }
+.picker-check { color: #0ea5e9; font-weight: 700; margin-left: 4px; }
+.picker-count { font-size: 0.75rem; color: #6b7280; margin-top: 8px; text-align: right; }
+.export-download-btn { width: 100%; margin-top: 14px; padding: 10px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: none; }
+.export-download-btn.active { background: #0ea5e9; color: #fff; }
+.export-download-btn.disabled { background: #1f2937; color: #4b5563; cursor: not-allowed; }

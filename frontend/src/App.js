@@ -133,7 +133,7 @@ function App() {
         />
       )}
       {exportOpen && (
-        <ExportModal
+        <ExportModal neighborhoods={neighborhoods}
           onClose={() => setExportOpen(false)}
           selected={selected}
           compareIds={compareIds}
