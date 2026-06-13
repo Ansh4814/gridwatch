@@ -130,6 +130,24 @@ def download_compare_report(id1: int, id2: int, temp_override: float = None):
         headers={"Content-Disposition": f"attachment; filename=gridwatch_{name1}_vs_{name2}.pdf"}
     )
 
+
+@router.get("/report/single/{neighborhood_id}")
+def download_single_report(neighborhood_id: int, subsidy: float = 0.0, moratorium: bool = False, temp_override: float = None):
+    n = next((x for x in NEIGHBORHOODS if x["id"] == neighborhood_id), None)
+    if not n:
+        return {"error": "Not found"}
+    temp = temp_override if temp_override else get_boston_temp()
+    risk = ml_predict(n, temp, subsidy_boost=subsidy, moratorium=moratorium)
+    exp = generate_explanation(n, risk, temp, subsidy, moratorium)
+    neighborhoods = [{**n, **risk, "explanation": exp}]
+    pdf = generate_report(neighborhoods, temp, subsidy, moratorium)
+    name = n["name"].replace(" ", "_")
+    return Response(
+        content=pdf,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=gridwatch_{name}.pdf"}
+    )
+
 @router.get("/health")
 def health():
     return {"status": "ok", "service": "GridWatch API", "model": "GradientBoostingRegressor"}

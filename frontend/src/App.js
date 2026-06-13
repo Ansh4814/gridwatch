@@ -4,11 +4,12 @@ import Sidebar from "./components/Sidebar";
 import PolicySliders from "./components/PolicySliders";
 import Header from "./components/Header";
 import CompareMode from "./components/CompareMode";
+import ExportModal from "./components/ExportModal";
 import "./App.css";
 import axios from "axios";
 
 const API = "https://gridwatch-production.up.railway.app/api";
-const REFRESH_INTERVAL = 60000; // 60 seconds
+const REFRESH_INTERVAL = 60000;
 
 function App() {
   const [neighborhoods, setNeighborhoods] = useState([]);
@@ -20,6 +21,8 @@ function App() {
   const [currentTemp, setCurrentTemp] = useState(null);
   const [loading, setLoading] = useState(true);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [compareIds, setCompareIds] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const selectedIdRef = useRef(null);
   const subsidyRef = useRef(0);
@@ -61,19 +64,9 @@ function App() {
     } catch (e) { console.error(e); }
   };
 
-  const handleExport = () => {
-    const params = new URLSearchParams();
-    if (subsidyRef.current) params.append("subsidy", subsidyRef.current);
-    if (moratoriumRef.current) params.append("moratorium", true);
-    if (tempOverrideRef.current) params.append("temp_override", tempOverrideRef.current);
-    window.open(`${API}/report?${params.toString()}`, "_blank");
-  };
-
-  // Initial load
   // eslint-disable-next-line
   useEffect(() => { fetchNeighborhoods(false); }, []);
 
-  // Auto-refresh every 60 seconds using live temp
   useEffect(() => {
     const interval = setInterval(() => {
       if (!tempOverrideRef.current) {
@@ -85,7 +78,6 @@ function App() {
   // eslint-disable-next-line
   }, []);
 
-  // Slider changes
   // eslint-disable-next-line
   useEffect(() => {
     fetchNeighborhoods(subsidy > 0 || moratorium || !!tempOverride);
@@ -104,9 +96,14 @@ function App() {
     selectedIdRef.current = null;
   };
 
+  const handleCompareClose = (ids) => {
+    setCompareOpen(false);
+    if (ids) setCompareIds(ids);
+  };
+
   return (
     <div className="app">
-      <Header currentTemp={currentTemp} lastUpdated={lastUpdated} onCompare={() => setCompareOpen(true)} onExport={handleExport} />
+      <Header currentTemp={currentTemp} lastUpdated={lastUpdated} onCompare={() => setCompareOpen(true)} onExport={() => setExportOpen(true)} />
       <div className="main">
         <div className="map-container">
           <Map neighborhoods={neighborhoods} onSelect={handleSelect} selected={selected} loading={loading} />
@@ -131,7 +128,17 @@ function App() {
       {compareOpen && (
         <CompareMode
           neighborhoods={neighborhoods}
-          onClose={() => setCompareOpen(false)}
+          onClose={handleCompareClose}
+          tempOverride={tempOverride}
+        />
+      )}
+      {exportOpen && (
+        <ExportModal
+          onClose={() => setExportOpen(false)}
+          selected={selected}
+          compareIds={compareIds}
+          subsidy={subsidy}
+          moratorium={moratorium}
           tempOverride={tempOverride}
         />
       )}

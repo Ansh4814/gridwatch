@@ -33,7 +33,7 @@ export default function CompareMode({ neighborhoods, onClose, tempOverride }) {
       <div className="compare-modal">
         <div className="compare-header">
           <span className="compare-title">⚡ Neighborhood Comparison</span>
-          <button className="compare-close" onClick={onClose}>✕</button>
+          <button className="compare-close" onClick={() => onClose([id1, id2])}>✕</button>
         </div>
 
         <div className="compare-selectors">
@@ -97,11 +97,7 @@ export default function CompareMode({ neighborhoods, onClose, tempOverride }) {
               )}
             </div>
           </div>
-          <button className="compare-pdf-btn" onClick={() => {
-            const params = new URLSearchParams({ id1, id2 });
-            if (tempOverride) params.append("temp_override", tempOverride);
-            window.open(`${API}/report/compare?${params.toString()}`, "_blank");
-          }}>📄 Export Comparison PDF</button>
+
         )}
       </div>
     </div>
