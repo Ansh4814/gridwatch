@@ -8,6 +8,7 @@ import "./App.css";
 import axios from "axios";
 
 const API = "https://gridwatch-production.up.railway.app/api";
+const REFRESH_INTERVAL = 60000; // 60 seconds
 
 function App() {
   const [neighborhoods, setNeighborhoods] = useState([]);
@@ -19,6 +20,7 @@ function App() {
   const [currentTemp, setCurrentTemp] = useState(null);
   const [loading, setLoading] = useState(true);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const selectedIdRef = useRef(null);
   const subsidyRef = useRef(0);
   const moratoriumRef = useRef(false);
@@ -41,6 +43,7 @@ function App() {
       const data = res.data.neighborhoods;
       setNeighborhoods(data);
       setCurrentTemp(res.data.current_temp_f || res.data.temp_f);
+      setLastUpdated(new Date());
       setLoading(false);
       if (selectedIdRef.current) {
         const fresh = data.find(n => n.id === selectedIdRef.current);
@@ -66,9 +69,23 @@ function App() {
     window.open(`${API}/report?${params.toString()}`, "_blank");
   };
 
+  // Initial load
   // eslint-disable-next-line
   useEffect(() => { fetchNeighborhoods(false); }, []);
 
+  // Auto-refresh every 60 seconds using live temp
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!tempOverrideRef.current) {
+        fetchNeighborhoods(subsidyRef.current > 0 || moratoriumRef.current);
+        if (selectedIdRef.current) fetchForecast(selectedIdRef.current);
+      }
+    }, REFRESH_INTERVAL);
+    return () => clearInterval(interval);
+  // eslint-disable-next-line
+  }, []);
+
+  // Slider changes
   // eslint-disable-next-line
   useEffect(() => {
     fetchNeighborhoods(subsidy > 0 || moratorium || !!tempOverride);
@@ -89,7 +106,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header currentTemp={currentTemp} onCompare={() => setCompareOpen(true)} onExport={handleExport} />
+      <Header currentTemp={currentTemp} lastUpdated={lastUpdated} onCompare={() => setCompareOpen(true)} onExport={handleExport} />
       <div className="main">
         <div className="map-container">
           <Map neighborhoods={neighborhoods} onSelect={handleSelect} selected={selected} loading={loading} />

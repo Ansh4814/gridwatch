@@ -1,6 +1,7 @@
 import React from "react";
 
-export default function Header({ currentTemp, onCompare, onExport }) {
+export default function Header({ currentTemp, lastUpdated, onCompare, onExport }) {
+  const timeStr = lastUpdated ? lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
   return (
     <div className="header">
       <div className="header-left">
@@ -9,7 +10,7 @@ export default function Header({ currentTemp, onCompare, onExport }) {
       </div>
       <div className="header-right">
         {currentTemp && (
-          <span className="temp-badge">🌡 Live Boston Temp: {currentTemp}°F</span>
+          <span className="temp-badge">🌡 Live Boston Temp: {currentTemp}°F {timeStr && <span style={{opacity:0.6, fontSize:"0.72rem"}}>· {timeStr}</span>}</span>
         )}
         <span className="data-badge">📊 Census ACS 2022 + NOAA</span>
         <button className="compare-btn" onClick={onCompare}>⚖ Compare</button>
